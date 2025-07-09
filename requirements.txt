@@ -5,3 +5,4 @@ torch
 pandas
 dateparser
 plotly
+joblib
