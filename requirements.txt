@@ -6,3 +6,4 @@ pandas
 dateparser
 plotly
 joblib
+matplotlib.pyplot
