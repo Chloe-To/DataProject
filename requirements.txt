@@ -7,3 +7,4 @@ dateparser
 plotly
 joblib
 matplotlib
+scikit-learn
