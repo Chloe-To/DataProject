@@ -10,10 +10,11 @@ Original file is located at
 # import the trained model files
 import requests
 
-url = "https://github.com/Chloe-To/DataProject/releases/tag/v1.0.0"
+url = "https://github.com/Chloe-To/DataProject/releases/download/v1.0.0/models.zip
+"
 response = requests.get(url)
-with open("models.zip", "wb") as f:
-    f.write(response.content)
+with zipfile.ZipFile("models.zip", "r") as zip_ref:
+    zip_ref.extractall("models")
 
 # imports and setup
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -30,6 +31,7 @@ from dateparser.search import search_dates
 from pathlib import Path
 import json
 import plotly.express as px
+import zipfile
 
 
 def load_tasks():
