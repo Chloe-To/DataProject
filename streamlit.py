@@ -10,8 +10,7 @@ Original file is located at
 # import the trained model files
 import requests
 
-url = "https://github.com/Chloe-To/DataProject/releases/download/v1.0.0/models.zip
-"
+url = "https://github.com/Chloe-To/DataProject/releases/download/v1.0.0/models.zip"
 response = requests.get(url)
 with zipfile.ZipFile("models.zip", "r") as zip_ref:
     zip_ref.extractall("models")
