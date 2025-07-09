@@ -1,2 +1,7 @@
 gdown
 transformers
+streamlit
+torch
+pandas
+dateparser
+plotly
