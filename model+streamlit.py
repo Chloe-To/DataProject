@@ -231,11 +231,18 @@ def extract_deadline_from_message(message, reference_date):
 
     return None
 
-# Simulated fine-tuned BERT model output
-def simulate_llm_scores(message):
-    urgency_score = random.uniform(0.3, 1.0)
-    importance_score = random.uniform(0.3, 1.0)
+# Load tokenizer globally
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
+# Use real model to get predictions
+def real_llm_scores(message):
+    model = load_model()
+    prediction = predict(message, model, tokenizer)
+    # Convert class predictions to normalized scores for urgency & importance
+    urgency_score = prediction.get('urgency', 0) / 2  # assuming 0-2 scale
+    importance_score = prediction.get('importance', 0) / 2
     return urgency_score, importance_score
+
 
 # Rule-based urgency score based on deadline proximity
 def rule_based_urgency(message_date, deadline=None):
@@ -292,7 +299,7 @@ def analyze_message(message, message_date):
     deadline = extract_deadline_from_message(message, message_date)
     urgency_rule_score = rule_based_urgency(message_date, deadline)
     urgency_flag_score = rule_based_flags(message)
-    urgency_llm_score, importance_llm_score = simulate_llm_scores(message)
+    urgency_llm_score, importance_llm_score = real_llm_scores(message)
 
     final_urgency, final_importance = combine_scores(
         urgency_rule_score,
