@@ -29,7 +29,7 @@ from io import BytesIO
 
 # import the trained model files
 # --- CONFIG ---
-REPO_RELEASE_ZIP_URL = "https://github.com/Chloe-To/DataProject/releases/tag/v1.0.0/model.zip"
+REPO_RELEASE_ZIP_URL = "https://github.com/Chloe-To/DataProject/releases/download/v1.0.0/model.zip"
 MODEL_DIR = "model"
 LABELS = ['urgency', 'importance', 'tone', 'sentiment']
 
