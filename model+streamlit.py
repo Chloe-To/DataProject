@@ -299,7 +299,15 @@ def analyze_message(message, message_date):
     deadline = extract_deadline_from_message(message, message_date)
     urgency_rule_score = rule_based_urgency(message_date, deadline)
     urgency_flag_score = rule_based_flags(message)
-    urgency_llm_score, importance_llm_score = real_llm_scores(message)
+    model = load_model()
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    predicted_labels = predict(message, model, tokenizer)
+
+    urgency_label = predicted_labels.get("urgency")
+    importance_label = predicted_labels.get("importance")
+    tone_label = predicted_labels.get("tone")
+    sentiment_label = predicted_labels.get("sentiment")
+
 
     final_urgency, final_importance = combine_scores(
         urgency_rule_score,
@@ -314,15 +322,27 @@ def analyze_message(message, message_date):
     return {
         "id": str(uuid.uuid4()),
         "user": st.session_state.username,
-        "date_sent": message_date.strftime("%Y-%m-%d"),  # Convert to string for JSON
+        "date_sent": message_date.strftime("%Y-%m-%d"),
         "message": message,
-        "deadline": deadline.strftime("%Y-%m-%d") if deadline else None,  # Convert to string if exists
+        "deadline": deadline.strftime("%Y-%m-%d") if deadline else None,
         "project": "",
         "action": "",
         "status": "Not Started",
         "escalate": escalate,
-        "response": response
+        "response": response,
+        "predicted_labels": {
+            "urgency": urgency_label,
+            "importance": importance_label,
+            "tone": tone_label,
+            "sentiment": sentiment_label
+        }
     }
+    st.markdown(f"**Predicted Urgency Label:** {result['predicted_labels']['urgency']}")
+    st.markdown(f"**Predicted Importance Label:** {result['predicted_labels']['importance']}")
+    st.markdown(f"**Predicted Tone:** {result['predicted_labels']['tone']}")
+    st.markdown(f"**Predicted Sentiment:** {result['predicted_labels']['sentiment']}")
+
+
 
 # --- USER DATABASE ---
 USERS = {
