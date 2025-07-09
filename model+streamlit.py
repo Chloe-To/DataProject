@@ -337,11 +337,6 @@ def analyze_message(message, message_date):
             "sentiment": sentiment_label
         }
     }
-    st.markdown(f"**Predicted Urgency Label:** {result['predicted_labels']['urgency']}")
-    st.markdown(f"**Predicted Importance Label:** {result['predicted_labels']['importance']}")
-    st.markdown(f"**Predicted Tone:** {result['predicted_labels']['tone']}")
-    st.markdown(f"**Predicted Sentiment:** {result['predicted_labels']['sentiment']}")
-
 
 
 # --- USER DATABASE ---
@@ -397,11 +392,19 @@ def urgency_calculator_tab():
 
         st.markdown(f"**Response:** {result['response']}")
 
-        if result["escalate"]:
-            tasks = load_tasks()
-            tasks.append(result)
-            save_tasks(tasks)
-            st.success("✅ Task added to dashboard.")
+    # Show predicted labels
+    preds = result["predicted_labels"]
+    st.subheader("🔍 Predicted Labels")
+    st.markdown(f"- **Urgency:** `{preds['urgency']}`")
+    st.markdown(f"- **Importance:** `{preds['importance']}`")
+    st.markdown(f"- **Tone:** `{preds['tone']}`")
+    st.markdown(f"- **Sentiment:** `{preds['sentiment']}`")
+
+    if result["escalate"]:
+        tasks = load_tasks()
+        tasks.append(result)
+        save_tasks(tasks)
+        st.success("✅ Task added to dashboard.")
 
 #------TAB 2-------
 def dashboard_tab():
