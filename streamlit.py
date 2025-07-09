@@ -7,8 +7,22 @@ Original file is located at
     https://colab.research.google.com/drive/1yxxLG2c9I6TbG_rZrzJbIMecnuAX_vnv
 """
 
-# imports and setup
+# import the trained model files
+import gdown, zipfile, os
 
+# Replace with your actual file ID from Google Drive
+file_id = "1vRMgH_L4NKTwf6vuMML-io-LU9O3SNYp"
+url = f"https://drive.google.com/file/d/1vRMgH_L4NKTwf6vuMML-io-LU9O3SNYp/view?usp=sharing"
+
+# Download and unzip
+gdown.download(url, "models.zip", quiet=False)
+
+with zipfile.ZipFile("models.zip", "r") as zip_ref:
+    zip_ref.extractall("models")
+
+# imports and setup
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
 import re
 import datetime
 import random
@@ -181,6 +195,30 @@ def extract_deadline_from_message(message, reference_date):
             return filtered_dates[0][1]
 
     return None
+
+# Load in trained LLM
+@st.cache_resource
+def load_models():
+    heads = ["urgency", "importance", "tone", "sentiment"]
+    models = {}
+    for head in heads:
+        path = f"models/{head}"
+        tokenizer = AutoTokenizer.from_pretrained(path)
+        model = AutoModelForSequenceClassification.from_pretrained(path)
+        models[head] = (tokenizer, model)
+    return models
+
+models = load_models()
+
+# Prediction function
+def classify_text(text, tokenizer, model):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+        probs = torch.nn.functional.softmax(outputs.logits, dim=1)
+        pred = torch.argmax(probs, dim=1).item()
+    return pred, probs.squeeze().tolist()
+
 
 # Simulated fine-tuned BERT model output
 def simulate_llm_scores(message):
