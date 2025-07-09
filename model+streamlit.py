@@ -393,18 +393,18 @@ def urgency_calculator_tab():
         st.markdown(f"**Response:** {result['response']}")
 
     # Show predicted labels
-    preds = result["predicted_labels"]
-    st.subheader("🔍 Predicted Labels")
-    st.markdown(f"- **Urgency:** `{preds['urgency']}`")
-    st.markdown(f"- **Importance:** `{preds['importance']}`")
-    st.markdown(f"- **Tone:** `{preds['tone']}`")
-    st.markdown(f"- **Sentiment:** `{preds['sentiment']}`")
+        preds = result["predicted_labels"]
+        st.subheader("🔍 Predicted Labels")
+        st.markdown(f"- **Urgency:** `{preds['urgency']}`")
+        st.markdown(f"- **Importance:** `{preds['importance']}`")
+        st.markdown(f"- **Tone:** `{preds['tone']}`")
+        st.markdown(f"- **Sentiment:** `{preds['sentiment']}`")
 
-    if result["escalate"]:
-        tasks = load_tasks()
-        tasks.append(result)
-        save_tasks(tasks)
-        st.success("✅ Task added to dashboard.")
+        if result["escalate"]:
+            tasks = load_tasks()
+            tasks.append(result)
+            save_tasks(tasks)
+            st.success("✅ Task added to dashboard.")
 
 #------TAB 2-------
 def dashboard_tab():
