@@ -8,17 +8,12 @@ Original file is located at
 """
 
 # import the trained model files
-import gdown, zipfile, os
+import requests
 
-# Replace with your actual file ID from Google Drive
-file_id = "1vRMgH_L4NKTwf6vuMML-io-LU9O3SNYp"
-url = f"https://drive.google.com/file/d/1vRMgH_L4NKTwf6vuMML-io-LU9O3SNYp/view?usp=sharing"
-
-# Download and unzip
-gdown.download(url, "models.zip", quiet=False)
-
-with zipfile.ZipFile("models.zip", "r") as zip_ref:
-    zip_ref.extractall("models")
+url = "https://github.com/Chloe-To/DataProject/releases/tag/v1.0.0"
+response = requests.get(url)
+with open("models.zip", "wb") as f:
+    f.write(response.content)
 
 # imports and setup
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
